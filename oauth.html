@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Autorização recebida · Achados e Recomendações</title>
+<link rel="stylesheet" href="style.css">
+<style>
+code{display:block;word-break:break-all;background:rgba(127,127,127,.12);padding:12px;border-radius:8px;font-size:1rem}
+button,.btn{display:inline-block;background:var(--accent);color:#fff;border:0;padding:12px 20px;border-radius:10px;font:inherit;font-weight:600;text-decoration:none;margin:8px 8px 0 0}
+</style>
+</head>
+<body>
+<header><a href="./">Achados e Recomendações</a></header>
+<main id="m"><h1>Processando…</h1></main>
+<script>
+const q = new URLSearchParams(location.search);
+const m = document.getElementById("m");
+let esperado = null;
+try { esperado = sessionStorage.getItem("estadoOAuth"); } catch {}
+const code = q.get("code");
+const el = (t, txt) => { const e = document.createElement(t); if (txt) e.textContent = txt; return e; };
+m.textContent = "";
+if (q.get("error")) {
+  m.append(el("h1", "Autorização não concluída"), el("p", "O Pinterest informou: " + q.get("error")));
+} else if (!code) {
+  m.append(el("h1", "Nenhum código recebido"), el("p", "Comece pela página de conexão."));
+} else {
+  m.append(el("h1", "Autorização recebida"));
+  if (esperado && q.get("state") !== esperado) m.append(el("p", "Atenção: este retorno não veio do botão de conexão deste aparelho. Se não foi você que iniciou, não use o código."));
+  m.append(el("p", "1. Copie o código abaixo (ele vale por poucos minutos e só funciona uma vez):"));
+  const c = el("code", code); m.append(c);
+  const b = el("button", "Copiar código");
+  b.onclick = async () => { try { await navigator.clipboard.writeText(code); b.textContent = "Copiado!"; } catch { b.textContent = "Selecione e copie manualmente"; } };
+  m.append(b);
+  m.append(el("p", "2. Abra o botão abaixo, toque em \"Run workflow\", cole o código e confirme:"));
+  const a = el("a", "Abrir \"Conectar Pinterest\" no GitHub");
+  a.className = "btn"; a.href = "https://github.com/hulima18-lab/arena-de-agentes/actions/workflows/conectar-pinterest.yml";
+  m.append(a);
+  history.replaceState(null, "", location.pathname);
+}
+</script>
+</body>
+</html>

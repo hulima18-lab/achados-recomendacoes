@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Conectar Pinterest · Achados e Recomendações</title>
+<link rel="stylesheet" href="style.css">
+<style>.btn{display:inline-block;background:var(--accent);color:#fff;padding:12px 20px;border-radius:10px;text-decoration:none;font-weight:600}</style>
+</head>
+<body>
+<header><a href="./">Achados e Recomendações</a><nav><a href="privacidade.html">Privacidade</a></nav></header>
+<main>
+<h1>Conectar a conta do Pinterest</h1>
+<p>Uso exclusivo do dono do perfil. Você vai autorizar o app <strong>Achados e Recomendações - Publicador</strong> a publicar Pins e ler as estatísticas da sua própria conta.</p>
+<p><a class="btn" id="go" href="#">Autorizar no Pinterest</a></p>
+<p class="note">Permissões pedidas: ler sua conta, ler e criar pastas, ler e criar Pins. Você pode revogar a qualquer momento em Configurações → Aplicativos conectados.</p>
+</main>
+<script>
+const s = crypto.getRandomValues(new Uint32Array(4)).join("-");
+try { sessionStorage.setItem("estadoOAuth", s); } catch {}
+const u = new URL("https://www.pinterest.com/oauth/");
+u.searchParams.set("client_id", "1639694");
+u.searchParams.set("redirect_uri", "https://hulima18-lab.github.io/achados-recomendacoes/oauth.html");
+u.searchParams.set("response_type", "code");
+u.searchParams.set("scope", "user_accounts:read,boards:read,boards:write,pins:read,pins:write");
+u.searchParams.set("state", s);
+document.getElementById("go").href = u.toString();
+</script>
+</body>
+</html>
